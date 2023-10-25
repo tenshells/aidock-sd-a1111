@@ -49,7 +49,7 @@ install_jupyter_kernels() {
 
 clone_webui() {
     cd /opt
-    git clone ${webui_git}
+    git clone ${webui_git} stable-diffusion-webui
 }
 
 main "$@"; exit
