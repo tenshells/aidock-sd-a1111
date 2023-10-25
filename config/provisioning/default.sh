@@ -17,6 +17,8 @@ cn_models_dir=${extensions_dir}/sd-webui-controlnet/models
 vae_models_dir=${models_dir}/VAE
 upscale_models_dir=${models_dir}/ESRGAN
 
+mkdir -p ${upscale_models_dir}
+
 printf "Downloading extensions..."
 cd $extensions_dir
 
@@ -95,14 +97,19 @@ printf "Setting up Reactor Force...\n"
 if [[ -d sd-webui-reactor-force ]]; then
     (cd sd-webui-reactor-force && git pull)
 else
-    git clone https://github.com/Gourieff/sd-webui-reactor-force
+    (git clone https://github.com/Gourieff/sd-webui-reactor-force && \
+            micromamba run -n webui ${PIP_INSTALL} -r sd-webui-reactor-force/requirements.txt
+        )
+
+    (mkdir -p ${models_dir}/insightface && wget -P ${models_dir} "https://huggingface.co/ashleykleynhans/inswapper/resolve/main/inswapper_128.onnx")
 fi
 
 printf "Setting up Adetailer...\n"
 if [[ -d adetailer ]]; then
     (cd adetailer && git pull)
 else
-    git clone https://github.com/Bing-su/adetailer
+    (git clone https://github.com/Bing-su/adetailer && \
+        micromamba run -n webui python adetailer/install.py
 fi
 
 
@@ -116,22 +123,22 @@ if [[ ! -e ${model_file} ]]; then
 fi
 
 if [[ $disk_space -ge 25000 ]]; then
-    # v2-1_768-ema-pruned
-    model_file=${sd_models_dir}/v2-1_768-ema-pruned.ckpt
-    model_url=https://huggingface.co/stabilityai/stable-diffusion-2-1/resolve/main/v2-1_768-ema-pruned.ckpt
+    # # v2-1_768-ema-pruned
+    # model_file=${sd_models_dir}/v2-1_768-ema-pruned.ckpt
+    # model_url=https://huggingface.co/stabilityai/stable-diffusion-2-1/resolve/main/v2-1_768-ema-pruned.ckpt
     
-    if [[ ! -e ${model_file} ]]; then
-        printf "Downloading Stable Diffusion 2.1...\n"
-        download ${model_url} ${model_file}
-    fi
+    # if [[ ! -e ${model_file} ]]; then
+    #     printf "Downloading Stable Diffusion 2.1...\n"
+    #     download ${model_url} ${model_file}
+    # fi
     
-    model_file=${sd_models_dir}/v2-1_768-ema-pruned.ckpt
-    model_url=https://huggingface.co/stabilityai/stable-diffusion-2-1/resolve/main/v2-1_768-ema-pruned.ckpt
+    # model_file=${sd_models_dir}/v2-1_768-ema-pruned.ckpt
+    # model_url=https://huggingface.co/stabilityai/stable-diffusion-2-1/resolve/main/v2-1_768-ema-pruned.ckpt
     
-    if [[ ! -e ${model_file} ]]; then
-        printf "Downloading Stable Diffusion 2.1...\n"
-        download ${model_url} ${model_file}
-    fi
+    # if [[ ! -e ${model_file} ]]; then
+    #     printf "Downloading Stable Diffusion 2.1...\n"
+    #     download ${model_url} ${model_file}
+    # fi
     
     
     cd ${sd_models_dir}
@@ -250,7 +257,7 @@ if [[ ! -e ${model_file} ]]; then
     download ${model_url} ${model_file}
 fi
 
-model_file=${upscale_models_dir}/4x_NMKD-Superscale-SP_178000_G.pth
+model_file=${upscale_models_dir}/4x_NMKD-Superscale-SP_178000_G.pthh
 model_url=https://huggingface.co/gemasai/4x_NMKD-Superscale-SP_178000_G/resolve/main/4x_NMKD-Superscale-SP_178000_G.pth
 
 if [[ ! -e ${model_file} ]]; then

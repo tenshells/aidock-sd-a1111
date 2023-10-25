@@ -3,7 +3,8 @@
 # Must exit and fail to build if any command fails
 set -eo pipefail
 
-webui_git="https://github.com/AUTOMATIC1111/stable-diffusion-webui"
+# Use sdnext instead of A1111
+webui_git="https://github.com/vladmandic/automatic"
 
 main() {
     create_env
@@ -13,7 +14,7 @@ main() {
 
 create_env() {
     apt-get update
-    $APT_INSTALL libgl1
+    $APT_INSTALL libgl1 build-essential
     # A new pytorch env costs ~ 300Mb
     exported_env=/tmp/${MAMBA_DEFAULT_ENV}.yaml
     micromamba env export -n ${MAMBA_DEFAULT_ENV} > "${exported_env}"

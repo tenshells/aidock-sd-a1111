@@ -5,7 +5,7 @@ FROM ${IMAGE_BASE}
 
 LABEL org.opencontainers.image.source https://github.com/ai-dock/stable-diffusion-webui
 
-LABEL org.opencontainers.image.description "Automatic1111 Stable Diffusion Web UI"
+LABEL org.opencontainers.image.description "SD.Next Stable Diffusion Web UI"
 
 LABEL maintainer="Rob Ballantyne <rob@dynamedia.uk>"
 
