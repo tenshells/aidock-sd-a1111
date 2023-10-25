@@ -101,7 +101,7 @@ else
             micromamba run -n webui ${PIP_INSTALL} -r sd-webui-reactor-force/requirements.txt
         )
 
-    (mkdir -p ${models_dir}/insightface && wget -P ${models_dir} "https://huggingface.co/ashleykleynhans/inswapper/resolve/main/inswapper_128.onnx")
+    (mkdir -p ${models_dir}/insightface && wget -P ${models_dir}/insightface "https://huggingface.co/ashleykleynhans/inswapper/resolve/main/inswapper_128.onnx")
 fi
 
 printf "Setting up Adetailer...\n"
@@ -142,13 +142,28 @@ if [[ $disk_space -ge 25000 ]]; then
     
     
     cd ${sd_models_dir}
-    wget --trust-server-names --content-disposition "https://civitai.com/api/download/models/197181" # Epicphotoasm
-    wget --trust-server-names --content-disposition "https://civitai.com/api/download/models/165271" # CyberRealistic Classic 2.0
-    wget --trust-server-names --content-disposition "https://civitai.com/api/download/models/198401" # CyberRealistic 5.0
-    wget --trust-server-names --content-disposition "https://civitai.com/api/download/models/130072" # RealisticVision V5.1
-    wget --trust-server-names --content-disposition "https://civitai.com/api/download/models/160495" # AnalogMadness V6.0
-    wget --trust-server-names --content-disposition "https://civitai.com/api/download/models/99805" # A-Zovya Photoreal V2
-    wget --trust-server-names --content-disposition "https://civitai.com/api/download/models/160989" # epiCRealism Natural Sin
+    if [[ ! -e "epicphotogasm_y.safetensors" ]]; then
+        printf "Download epicphotogasm_y\n"
+        wget --trust-server-names --content-disposition "https://civitai.com/api/download/models/197181" # Epicphotoasm
+    fi
+    if [[ ! -e "cyberrealistic_classicV20.safetensors" ]]; then
+        wget --trust-server-names --content-disposition "https://civitai.com/api/download/models/165271" # CyberRealistic Classic 2.0
+    fi
+    if [[ ! -e "cyberrealistic_v40.safetensors" ]]; then
+        wget --trust-server-names --content-disposition "https://civitai.com/api/download/models/198401" # CyberRealistic 4.0
+    fi
+    if [[ ! -e "realisticVisionV51_v51VAE.safetensors" ]]; then
+         wget --trust-server-names --content-disposition "https://civitai.com/api/download/models/130072" # RealisticVision V5.1
+    fi
+    if [[ ! -e "analogMadness_v60.safetensors" ]]; then
+        wget --trust-server-names --content-disposition "https://civitai.com/api/download/models/160495" # AnalogMadness V6.0
+    fi
+    if [[ ! -e "aZovyaPhotoreal_v2.safetensors" ]]; then
+        wget --trust-server-names --content-disposition "https://civitai.com/api/download/models/99805" # A-Zovya Photoreal V2
+    fi
+    if [[ ! -e "epicrealism_naturalSin.safetensors" ]]; then
+        wget --trust-server-names --content-disposition "https://civitai.com/api/download/models/160989" # epiCRealism Natural Sin
+    fi
 
 
     # # sd_xl_base_1
