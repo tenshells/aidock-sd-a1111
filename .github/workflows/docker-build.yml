@@ -85,7 +85,7 @@ jobs:
       fail-fast: false
       matrix:
         base:
-          - "pytorch"
+          #- "pytorch"
           - "jupyter-pytorch"
         python:
           - "3.10"
@@ -95,7 +95,7 @@ jobs:
           # - "11.7.1"
           - "11.8.0"
         level:
-          - "base"
+        #  - "base"
           - "cudnn8-devel"
     steps:
       -
@@ -145,6 +145,8 @@ jobs:
             PYTORCH_VERSION=${{ matrix.pytorch }}
           push: true
           provenance: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: ${{ env.TAGS }}
 
   # amd-base:
