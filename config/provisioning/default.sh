@@ -91,6 +91,21 @@ else
     git clone https://github.com/Coyote-A/ultimate-upscale-for-automatic1111
 fi
 
+printf "Setting up Reactor Force...\n"
+if [[ -d sd-webui-reactor-force ]]; then
+    (cd sd-webui-reactor-force && git pull)
+else
+    git clone https://github.com/Gourieff/sd-webui-reactor-force
+fi
+
+printf "Setting up Adetailer...\n"
+if [[ -d adetailer ]]; then
+    (cd adetailer && git pull)
+else
+    git clone https://github.com/Bing-su/adetailer
+fi
+
+
 # v1-5-pruned-emaonly
 model_file=${sd_models_dir}/_v1-5-pruned-emaonly.ckpt
 model_url=https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.ckpt
@@ -110,24 +125,42 @@ if [[ $disk_space -ge 25000 ]]; then
         download ${model_url} ${model_file}
     fi
     
-    
-    # sd_xl_base_1
-    model_file=${sd_models_dir}/sd_xl_base_1.0.safetensors
-    model_url=https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors
+    model_file=${sd_models_dir}/v2-1_768-ema-pruned.ckpt
+    model_url=https://huggingface.co/stabilityai/stable-diffusion-2-1/resolve/main/v2-1_768-ema-pruned.ckpt
     
     if [[ ! -e ${model_file} ]]; then
-        printf "Downloading Stable Diffusion XL base...\n"
-        download ${model_url} ${model_file} 
-    fi
-    
-    # sd_xl_refiner_1
-    model_file=${sd_models_dir}/sd_xl_refiner_1.0.safetensors
-    model_url=https://huggingface.co/stabilityai/stable-diffusion-xl-refiner-1.0/resolve/main/sd_xl_refiner_1.0.safetensors
-    
-    if [[ ! -e ${model_file} ]]; then
-        printf "Downloading Stable Diffusion XL refiner...\n"
+        printf "Downloading Stable Diffusion 2.1...\n"
         download ${model_url} ${model_file}
     fi
+    
+    
+    cd ${sd_models_dir}
+    wget --trust-server-names --content-disposition "https://civitai.com/api/download/models/197181" # Epicphotoasm
+    wget --trust-server-names --content-disposition "https://civitai.com/api/download/models/165271" # CyberRealistic Classic 2.0
+    wget --trust-server-names --content-disposition "https://civitai.com/api/download/models/198401" # CyberRealistic 5.0
+    wget --trust-server-names --content-disposition "https://civitai.com/api/download/models/130072" # RealisticVision V5.1
+    wget --trust-server-names --content-disposition "https://civitai.com/api/download/models/160495" # AnalogMadness V6.0
+    wget --trust-server-names --content-disposition "https://civitai.com/api/download/models/99805" # A-Zovya Photoreal V2
+    wget --trust-server-names --content-disposition "https://civitai.com/api/download/models/160989" # epiCRealism Natural Sin
+
+
+    # # sd_xl_base_1
+    # model_file=${sd_models_dir}/sd_xl_base_1.0.safetensors
+    # model_url=https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors
+    
+    # if [[ ! -e ${model_file} ]]; then
+    #     printf "Downloading Stable Diffusion XL base...\n"
+    #     download ${model_url} ${model_file} 
+    # fi
+    
+    # # sd_xl_refiner_1
+    # model_file=${sd_models_dir}/sd_xl_refiner_1.0.safetensors
+    # model_url=https://huggingface.co/stabilityai/stable-diffusion-xl-refiner-1.0/resolve/main/sd_xl_refiner_1.0.safetensors
+    
+    # if [[ ! -e ${model_file} ]]; then
+    #     printf "Downloading Stable Diffusion XL refiner...\n"
+    #     download ${model_url} ${model_file}
+    # fi
 else
         printf "\nSkipping extra models (disk < 30GB)\n"
 fi
@@ -183,13 +216,13 @@ if [[ ! -e ${model_file} ]]; then
     download ${model_url} ${model_file}
 fi
 
-model_file=${vae_models_dir}/sdxl_vae.safetensors
-model_url=https://huggingface.co/stabilityai/sdxl-vae/resolve/main/sdxl_vae.safetensors
+# model_file=${vae_models_dir}/sdxl_vae.safetensors
+# model_url=https://huggingface.co/stabilityai/sdxl-vae/resolve/main/sdxl_vae.safetensors
 
-if [[ ! -e ${model_file} ]]; then
-    printf "Downloading sdxl_vae...\n"
-    download ${model_url} ${model_file}
-fi
+# if [[ ! -e ${model_file} ]]; then
+#     printf "Downloading sdxl_vae...\n"
+#     download ${model_url} ${model_file}
+# fi
 
 printf "Downloading Upscalers...\n"
 
@@ -214,6 +247,22 @@ model_url=https://huggingface.co/ai-forever/Real-ESRGAN/resolve/main/RealESRGAN_
 
 if [[ ! -e ${model_file} ]]; then
     printf "Downloading RealESRGAN_x4...\n"
+    download ${model_url} ${model_file}
+fi
+
+model_file=${upscale_models_dir}/4x_NMKD-Superscale-SP_178000_G.pth
+model_url=https://huggingface.co/gemasai/4x_NMKD-Superscale-SP_178000_G/resolve/main/4x_NMKD-Superscale-SP_178000_G.pth
+
+if [[ ! -e ${model_file} ]]; then
+    printf "Downloading 4x_NMKD-Superscale-SP_178000_G...\n"
+    download ${model_url} ${model_file}
+fi
+
+model_file=${upscale_models_dir}/8x_NMKD-Superscale_150000_G.pth
+model_url=https://huggingface.co/uwg/upscaler/resolve/main/ESRGAN/8x_NMKD-Superscale_150000_G.pth
+
+if [[ ! -e ${model_file} ]]; then
+    printf "Downloading 8x_NMKD-Superscale_150000_G...\n"
     download ${model_url} ${model_file}
 fi
 

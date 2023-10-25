@@ -27,21 +27,21 @@ if [[ ! -e ${model_file} ]]; then
     wget -q -O ${model_file} ${model_url}
 fi
 
-# sd_xl_base_1
-model_file=${checkpoints_dir}/sd_xl_base_1.0.safetensors
-model_url=https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors
+# # sd_xl_base_1
+# model_file=${checkpoints_dir}/sd_xl_base_1.0.safetensors
+# model_url=https://huggingface.co/stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors
 
-if [[ ! -e ${model_file} ]]; then
-    printf "Downloading Stable Diffusion XL base...\n"
-    wget -q -O ${model_file} ${model_url}
-fi
+# if [[ ! -e ${model_file} ]]; then
+#     printf "Downloading Stable Diffusion XL base...\n"
+#     wget -q -O ${model_file} ${model_url}
+# fi
 
-# sd_xl_refiner_1
-model_file=${checkpoints_dir}/sd_xl_refiner_1.0.safetensors
-model_url=https://huggingface.co/stabilityai/stable-diffusion-xl-refiner-1.0/resolve/main/sd_xl_refiner_1.0.safetensors
+# # sd_xl_refiner_1
+# model_file=${checkpoints_dir}/sd_xl_refiner_1.0.safetensors
+# model_url=https://huggingface.co/stabilityai/stable-diffusion-xl-refiner-1.0/resolve/main/sd_xl_refiner_1.0.safetensors
 
-if [[ ! -e ${model_file} ]]; then
-    printf "Downloading Stable Diffusion XL refiner...\n"
-    wget -q -O ${model_file} ${model_url}
-fi
+# if [[ ! -e ${model_file} ]]; then
+#     printf "Downloading Stable Diffusion XL refiner...\n"
+#     wget -q -O ${model_file} ${model_url}
+# fi
 
