@@ -109,7 +109,7 @@ if [[ -d adetailer ]]; then
     (cd adetailer && git pull)
 else
     (git clone https://github.com/Bing-su/adetailer && \
-        micromamba run -n webui python adetailer/install.py
+        micromamba run -n webui python adetailer/install.py)
 fi
 
 

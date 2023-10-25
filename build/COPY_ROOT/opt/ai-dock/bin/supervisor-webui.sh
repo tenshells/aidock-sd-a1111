@@ -37,7 +37,7 @@ if [[ $XPU_TARGET = "CPU" ]]; then
     PLATFORM_FLAGS="--use-cpu all --skip-torch-cuda-test --no-half"
 fi
 # We can safely --skip-prepare-environment because it's already been done
-BASE_FLAGS="--port ${LISTEN_PORT} --skip-prepare-environment"
+BASE_FLAGS="--port ${LISTEN_PORT} --no-download --skip-requirements"
 
 # Delay launch until micromamba is ready
 if [[ -f /run/workspace_moving || -f /run/provisioning_script ]]; then
