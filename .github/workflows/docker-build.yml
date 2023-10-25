@@ -85,8 +85,8 @@ jobs:
       fail-fast: false
       matrix:
         base:
-          #- "pytorch"
-          - "jupyter-pytorch"
+          - "pytorch"
+          #- "jupyter-pytorch"
         python:
           - "3.10"
         pytorch:
