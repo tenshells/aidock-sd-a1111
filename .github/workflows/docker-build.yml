@@ -17,67 +17,67 @@ env:
   LATEST_CPU_JUPYTER: "jupyter-pytorch-2.0.1-py3.10-cpu-22.04"
 
 jobs:
-  cpu-base:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        base:
-          - "pytorch"
-          - "jupyter-pytorch"
-        python:
-          - "3.10"
-        pytorch:
-          - "2.0.1"
-    steps:
-      -
-        name: Free Space
-        run: |
-          df -h
-          rm -rf /usr/share/dotnet
-          rm -rf /opt/ghc
-          rm -rf /usr/local/share/boost
-          rm -rf "$AGENT_TOOLSDIRECTORY"
-          df -h
-      -
-        name: Env Setter
-        run: |
-          echo "PACKAGE_NAME=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
-      -
-        name: Checkout
-        uses: actions/checkout@v3
-      -
-        name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      -
-        name: Set tags
-        run: |
-          img_path="ghcr.io/${{ env.PACKAGE_NAME }}"
-          ver_tag="${{ matrix.base }}-${{ matrix.pytorch }}-py${{ matrix.python }}-cpu-${{ env.UBUNTU_VERSION }}"
+  # cpu-base:
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       base:
+  #         - "pytorch"
+  #         - "jupyter-pytorch"
+  #       python:
+  #         - "3.10"
+  #       pytorch:
+  #         - "2.0.1"
+  #   steps:
+  #     -
+  #       name: Free Space
+  #       run: |
+  #         df -h
+  #         rm -rf /usr/share/dotnet
+  #         rm -rf /opt/ghc
+  #         rm -rf /usr/local/share/boost
+  #         rm -rf "$AGENT_TOOLSDIRECTORY"
+  #         df -h
+  #     -
+  #       name: Env Setter
+  #       run: |
+  #         echo "PACKAGE_NAME=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
+  #     -
+  #       name: Checkout
+  #       uses: actions/checkout@v3
+  #     -
+  #       name: Login to GitHub Container Registry
+  #       uses: docker/login-action@v2
+  #       with:
+  #         registry: ghcr.io
+  #         username: ${{ github.actor }}
+  #         password: ${{ secrets.GITHUB_TOKEN }}
+  #     -
+  #       name: Set tags
+  #       run: |
+  #         img_path="ghcr.io/${{ env.PACKAGE_NAME }}"
+  #         ver_tag="${{ matrix.base }}-${{ matrix.pytorch }}-py${{ matrix.python }}-cpu-${{ env.UBUNTU_VERSION }}"
           
-          if [[ $ver_tag == ${{ env.LATEST_CPU }} ]]; then
-              TAGS="${img_path}:latest-cpu, ${img_path}:$ver_tag"
-          elif [[ $ver_tag == ${{ env.LATEST_CPU_JUPYTER }} ]]; then
-              TAGS="${img_path}:latest-cpu-jupyter, ${img_path}:$ver_tag"
-          else
-              TAGS="${img_path}:$ver_tag"
-          fi
-          echo "TAGS=${TAGS}" >> ${GITHUB_ENV}
-      -
-        name: Build and push
-        uses: docker/build-push-action@v4
-        with:
-          context: build
-          build-args: |
-            IMAGE_BASE=ghcr.io/ai-dock/${{ matrix.base }}:${{ matrix.pytorch }}-py${{ matrix.python }}-cpu-${{ env.UBUNTU_VERSION }}
-          push: true
-          # Avoids unknown/unknown architecture and extra metadata
-          provenance: false
-          tags: ${{ env.TAGS }}
+  #         if [[ $ver_tag == ${{ env.LATEST_CPU }} ]]; then
+  #             TAGS="${img_path}:latest-cpu, ${img_path}:$ver_tag"
+  #         elif [[ $ver_tag == ${{ env.LATEST_CPU_JUPYTER }} ]]; then
+  #             TAGS="${img_path}:latest-cpu-jupyter, ${img_path}:$ver_tag"
+  #         else
+  #             TAGS="${img_path}:$ver_tag"
+  #         fi
+  #         echo "TAGS=${TAGS}" >> ${GITHUB_ENV}
+  #     -
+  #       name: Build and push
+  #       uses: docker/build-push-action@v4
+  #       with:
+  #         context: build
+  #         build-args: |
+  #           IMAGE_BASE=ghcr.io/ai-dock/${{ matrix.base }}:${{ matrix.pytorch }}-py${{ matrix.python }}-cpu-${{ env.UBUNTU_VERSION }}
+  #         push: true
+  #         # Avoids unknown/unknown architecture and extra metadata
+  #         provenance: false
+  #         tags: ${{ env.TAGS }}
     
   nvidia-base:
     runs-on: ubuntu-latest
@@ -92,7 +92,7 @@ jobs:
         pytorch:
           - "2.0.1"
         cuda:
-          - "11.7.1"
+          # - "11.7.1"
           - "11.8.0"
         level:
           - "base"
@@ -147,68 +147,68 @@ jobs:
           provenance: false
           tags: ${{ env.TAGS }}
 
-  amd-base:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        base:
-          - "pytorch"
-          - "jupyter-pytorch"
-        python:
-          - "3.10"
-        pytorch:
-          - "2.0.1"
-        rocm:
-          - "5.4.2"
-        level:
-          - "runtime"
-        # Templating for future releases
-    steps:
-      -
-        name: Free Space
-        run: |
-          df -h
-          rm -rf /usr/share/dotnet
-          rm -rf /opt/ghc
-          rm -rf /usr/local/share/boost
-          rm -rf "$AGENT_TOOLSDIRECTORY"
-          df -h
-      -
-        name: Env Setter
-        run: |
-          echo "PACKAGE_NAME=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
-      -
-        name: Checkout
-        uses: actions/checkout@v3
-      -
-        name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      -
-        name: Set tags
-        run: |
-          img_path="ghcr.io/${{ env.PACKAGE_NAME }}"
-          ver_tag="${{ matrix.base }}-${{ matrix.pytorch }}-py${{ matrix.python }}-rocm-${{ matrix.rocm }}-${{ matrix.level }}-${{ env.UBUNTU_VERSION }}"
+  # amd-base:
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       base:
+  #         - "pytorch"
+  #         - "jupyter-pytorch"
+  #       python:
+  #         - "3.10"
+  #       pytorch:
+  #         - "2.0.1"
+  #       rocm:
+  #         - "5.4.2"
+  #       level:
+  #         - "runtime"
+  #       # Templating for future releases
+  #   steps:
+  #     -
+  #       name: Free Space
+  #       run: |
+  #         df -h
+  #         rm -rf /usr/share/dotnet
+  #         rm -rf /opt/ghc
+  #         rm -rf /usr/local/share/boost
+  #         rm -rf "$AGENT_TOOLSDIRECTORY"
+  #         df -h
+  #     -
+  #       name: Env Setter
+  #       run: |
+  #         echo "PACKAGE_NAME=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
+  #     -
+  #       name: Checkout
+  #       uses: actions/checkout@v3
+  #     -
+  #       name: Login to GitHub Container Registry
+  #       uses: docker/login-action@v2
+  #       with:
+  #         registry: ghcr.io
+  #         username: ${{ github.actor }}
+  #         password: ${{ secrets.GITHUB_TOKEN }}
+  #     -
+  #       name: Set tags
+  #       run: |
+  #         img_path="ghcr.io/${{ env.PACKAGE_NAME }}"
+  #         ver_tag="${{ matrix.base }}-${{ matrix.pytorch }}-py${{ matrix.python }}-rocm-${{ matrix.rocm }}-${{ matrix.level }}-${{ env.UBUNTU_VERSION }}"
           
-          if [[ $ver_tag == ${{ env.LATEST_ROCM }} ]]; then
-              TAGS="${img_path}:latest-rocm, ${img_path}:$ver_tag"
-          elif [[ $ver_tag == ${{ env.LATEST_ROCM_JUPYTER }} ]]; then
-              TAGS="${img_path}:latest-rocm-jupyter, ${img_path}:$ver_tag"
-          else
-              TAGS="${img_path}:$ver_tag"
-          fi
-          echo "TAGS=${TAGS}" >> ${GITHUB_ENV}
-      -
-        name: Build and push
-        uses: docker/build-push-action@v4
-        with:
-          context: build
-          build-args: |
-            IMAGE_BASE=ghcr.io/ai-dock/${{ matrix.base }}:${{ matrix.pytorch }}-py${{ matrix.python }}-rocm-${{ matrix.rocm }}-${{ matrix.level }}-${{ env.UBUNTU_VERSION }}
-          push: true
-          provenance: false
-          tags: ${{ env.TAGS }}
+  #         if [[ $ver_tag == ${{ env.LATEST_ROCM }} ]]; then
+  #             TAGS="${img_path}:latest-rocm, ${img_path}:$ver_tag"
+  #         elif [[ $ver_tag == ${{ env.LATEST_ROCM_JUPYTER }} ]]; then
+  #             TAGS="${img_path}:latest-rocm-jupyter, ${img_path}:$ver_tag"
+  #         else
+  #             TAGS="${img_path}:$ver_tag"
+  #         fi
+  #         echo "TAGS=${TAGS}" >> ${GITHUB_ENV}
+  #     -
+  #       name: Build and push
+  #       uses: docker/build-push-action@v4
+  #       with:
+  #         context: build
+  #         build-args: |
+  #           IMAGE_BASE=ghcr.io/ai-dock/${{ matrix.base }}:${{ matrix.pytorch }}-py${{ matrix.python }}-rocm-${{ matrix.rocm }}-${{ matrix.level }}-${{ env.UBUNTU_VERSION }}
+  #         push: true
+  #         provenance: false
+  #         tags: ${{ env.TAGS }}
